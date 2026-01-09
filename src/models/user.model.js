@@ -20,6 +20,13 @@ class User {
     ]);
     return row.length > 0 ? row[0] : null;
   }
+
+  async findOne(id) {
+    const [row] = await pool.query(`select id, email from users where id = ?`, [
+      id,
+    ]);
+    return row.length > 0 ? row[0] : null;
+  }
 }
 
 module.exports = new User();

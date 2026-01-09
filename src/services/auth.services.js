@@ -1,14 +1,32 @@
 const authModel = require("../models/auth.model");
+const jwtConfig = require("../config/jwt");
+
+const jwt = require("jsonwebtoken");
 
 class AuthService {
-  async register(userData) {
-    const result = await authModel.register(userData);
-    return result;
+  async register(email, password) {
+    const insertId = await authModel.createUser(email, password);
+    const newUser = {
+      insertId,
+      email,
+    };
+    return newUser;
   }
 
-  async login(userData) {
-    const result = await authModel.login(userData);
-    return result;
+  async login(email, password) {
+    const user = await authModel.findUserByEmailAndPassword(email, password);
+    const payload = {
+      sub: user.id,
+      exp: Date.now() + 60 * 60 * 1000,
+    };
+    const token = jwt.sign(payload, jwtConfig.secret);
+    return {
+      user,
+      token: {
+        access_token: token,
+        access_token_ttl: 3600,
+      },
+    };
   }
 }
 

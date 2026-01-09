@@ -1,20 +1,20 @@
-const pool = require("mysql2/promise");
+const pool = require("../config/database");
 
 class AuthModel {
-  register = async (userData) => {
-    const result = await pool.query(
-      `insert into users (email, password) values (?, ?)`,
-      [userData.email, userData.passord]
+  createUser = async (email, password) => {
+    const [{ insertId }] = await pool.query(
+      `insert into users (email, password) values (?, ?);`,
+      [email, password]
     );
-    return result;
+    return insertId;
   };
 
-  login = async (userData) => {
-    const result = await pool.query(
-      `select id, email from users where id = ?, email = ?, password = ?`,
-      [userData.id, userData.email, userData.passord]
+  findUserByEmailAndPassword = async (email, password) => {
+    const [result] = await pool.query(
+      `select id, email from users where email = ? and password = ?;`,
+      [email, password]
     );
-    return result;
+    return result[0];
   };
 }
 

@@ -1,5 +1,14 @@
-const errorHandler = (err, _, res) => {
-  res.error(500, err.message, err);
+const { JsonWebTokenError } = require("jsonwebtoken");
+
+const errorHandler = (err, req, res, next) => {
+  let status;
+
+  if (err instanceof JsonWebTokenError) {
+    err = "Unauthorized!";
+    status = 401;
+  }
+
+  res.error(status, String(err));
 };
 
 module.exports = errorHandler;
