@@ -1,12 +1,6 @@
-Test posts by user_id;
-http://localhost:3000/api/posts?page=1&limit=30&user_id=1
-
-🚀 User Post - Backend API
-This is the backend API for the An Phu Holdings office rental platform, built with Node.js, Express, and MySQL.🛠 FeaturesPost Management: CRUD operations for office rental posts.Soft Delete: Posts are marked with deleted_at instead of being permanently removed.Pagination: Efficient data fetching using LIMIT and OFFSET.Validation: Secure input handling for slugs, titles, and numeric parameters.CORS Enabled: Configured for local development (Vite) and GitHub Pages deployment.💻 Tech StackRuntime: Node.jsFramework: Express.jsDatabase: MySQL (using mysql2/promise)Deployment: Vercel⚙️ Getting Started1. PrerequisitesNode.js installed.MySQL server running.2. Installation
-
 ### Clone the repository
 
-git clone https://github.com/HuyTranTuan/f8-node-day-4-be.git
+git clone https://github.com/HuyTranTuan/f8-node-day-5-be.git
 
 ### Install dependencies
 
@@ -15,36 +9,44 @@ npm install
 3.  Environment VariablesCreate a .env file in the root directory and add your database credentials:
 
     DB_HOST=localhost
-    DB_USER=root
+    DB_USER=your_user
     DB_PASSWORD=your_password
     DB_NAME=your_db_name
     PORT=3000
 
-4.  Database SetupRun the following SQL to create the posts table:
+4.  Database SetupRun:
 
-        CREATE TABLE posts (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            slug VARCHAR(255) UNIQUE NOT NULL,
-            content TEXT,
-            user_id INT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            deleted_at TIMESTAMP NULL DEFAULT NULL
-        );
+\_ Register: POST /api/auth/register
+{
+"email": "youremail@gmail.com",
+"password": "yourpassword"
+}
 
-        CREATE TABLE users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(100) NOT NULL UNIQUE,
-            password VARCHAR(255) NOT NULL, -- Stored as a hash
-        );
+\_ Login: POST /api/auth/login
+{
+"email": "youremail@gmail.com",
+"password": "yourpassword"
+}
+You will receive an accessToken, copy it and paste in to header "Authorization" with `Bearer {your_access_token}`
 
-    🛣 API EndpointsPostsMethodEndpointDescription
+\_ Create conversation POST /api/conversations
+{
+"name" : "name of the conversation",
+"participants": [list participant's id]
+}
 
-    \_ GET/api/posts Get all posts (Supports page & limit)
-    \_ GET/api/posts/:id Get a specific post by ID
-    \_ POST/api/posts Create a new post
-    \_ PUT/api/posts/:id Update an existing post
-    \_ DELETE/api/posts/:id Soft delete a post
+\_ Get all conversation of currentUser GET /api/conversations
+
+\_ Add user to conversation POST /api/conversations/:id/participants - Thêm user vào conversation (chỉ group chat), nhận user_id trong body
+{
+"user_id" : "user id",
+}
+
+\_ Send message to conversation POST /api/conversations/:id/messages
+{
+"content" : "your content"
+}
+
+\_ Get all messages in conversation GET /api/conversations/:id/messages
 
 👨‍💻 AuthorHuy Tran TuanGitHub
